@@ -1,3 +1,7 @@
+# To do:
+# Parse through subtree when end of pattern match reached
+# Retrieve index from leaves
+# Be able to have both partial and complete matches
 
 # class for nodes
 class Node():
@@ -8,7 +12,7 @@ class Node():
 
     def reproduction(self, child_node, first_letter):
         self.children[first_letter] = child_node
-        child_node.parent = self
+        child_node.adoption(self)
 
     def index(self):
         return self.indexlist
@@ -16,8 +20,11 @@ class Node():
     def update_index(self, index_pos, new_index):
         self.indexlist[index_pos] = new_index
     
-    def node_parent(self):
+    def get_parent(self):
         return self.parent
+    
+    def adoption(self, new_parent):
+        self.parent = new_parent
         
     # if node is leaf int represents start position of suffix in x
     def is_leaf(self):
@@ -47,14 +54,10 @@ def construct_tree(x):
 
     for i in range(len(x)): # loop through all suffixes
         node, head_l, match_l = search_tree(x, T, i) # ab$, T, b$
-        print(node, head_l, match_l)
         if match_l == 0: # no match in node, extend from it
-            extend_from_node(node, x[i:], x, head_l, T)
+            T = extend_from_node(node, x[i:], x, head_l, T)
         else: # match within part of edge, extend within edge
-            print('extend from edge')
-            extend_from_edge(node, x[i:], x, head_l, T, match_l)
-            for el in T:
-                print(el)
+            T = extend_from_edge(node, x[i:], x, head_l, T, match_l)
 
     for el in T:
         print(el)
@@ -67,15 +70,13 @@ def search_tree(x, T, i):
         # Check if a child starting with the required letter exists
         if not node.is_leaf() and node.exists_child(letter):
             w = node.get_child(letter)
-
             index = w.indexlist
             edge_l = index[1]-index[0]
-            substr_len = len(x[i:])-i
+            substr_len = len(x[i:])
 
             # Match through edge
             for match_l in range(1,edge_l):
                 same = x[index[0]+match_l] == x[i+match_l]
-                print(f'Compare: {x[index[0]+match_l]}, {x[i+match_l]}')
 
                 # matched until end of string, not end of edge
                 if same and match_l == substr_len and substr_len != edge_l:
@@ -83,7 +84,6 @@ def search_tree(x, T, i):
                 elif same: # match
                     continue
                 else: # mismatch
-                    print(w, i, match_l)
                     return w, i, match_l
             
             # search next node
@@ -106,24 +106,31 @@ def extend_from_node(node, string, x, i, T):
     T.append(new_node)
     node.reproduction(new_node, string[0])
 
+    # Added return T to update tree. Maybe instead return new elements and concatenate with T in construct_tree?
+    return T
+
 def extend_from_edge(node, string, x, head_l, T, match_l):
     # create new node w = node[:match_l] with parent of 'node' as parent, string and node as children
     # update parent child from node to w
     # update node indexlist to [match_l:], change parent to w
 
     previous_indexes = node.index()
+    x_last_match_letter = x[previous_indexes[0]+match_l-1]
     x_mismatch_letter = x[previous_indexes[0]+match_l]
 
     # create the intermediate node
     w_index_list = [previous_indexes[0], previous_indexes[0]+match_l]       
-    w = Node(w_index_list, node.parent, {})
+    w = Node(w_index_list, node.get_parent(), {}) #node.parent doesnt exist 
+
+    # make the parent of node the parent of w, and w its child
+    node.get_parent().reproduction(w, x_last_match_letter)
     T.append(w)
 
     # create the new node
 
     l = len(x)
     new_index_list = [head_l+match_l, l]
-    new_node = Node(new_index_list, None, len(x)-len(string))
+    new_node = Node(new_index_list, None, len(x)-len(string)) # index list, parent, label because leaf
     T.append(new_node)
 
     # change node index
@@ -132,6 +139,8 @@ def extend_from_edge(node, string, x, head_l, T, match_l):
     # add w children
     w.reproduction(new_node, string[match_l])
     w.reproduction(node, x_mismatch_letter)
+
+    return T
 
 
 def main():
