@@ -42,7 +42,7 @@ def plot_runtime_search(max_length, iterations):
 
 def main():
     #try
-    plot_runtime_construct(25, 10)
+    plot_runtime_construct(40, 10)
     plot_runtime_search()
 
 if __name__ == '__main__':
