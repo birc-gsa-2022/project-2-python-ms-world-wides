@@ -15,9 +15,6 @@ class Node():
     def reproduction(self, child_node, first_letter):
         self.children[first_letter] = child_node
         child_node.parent = self
-
-    def index(self):
-        return self.indexlist
     
     def update_index(self, index_pos, new_index):
         self.indexlist[index_pos] = new_index
@@ -57,14 +54,21 @@ def construct_tree(x):
 
     return T
 
-#Function searchs for string x in Suffixtree T
+#Function searches for string x in Suffix tree T
 def search_tree(x, T, i):
 
-    def search_node(node, x, i):
-        letter = x[i]
-        print(f'suffix: {x[i:]}')
-        # Check if a child starting with the required letter exists
+    # need node, p, x and an iterator i through p for pattern matching
+    # need node, x and iterator i through suffix for suffix matching
 
+    def search_node(x, node, i): # if i == int, then suffix. if i == str, then pattern
+        # if type(i) == int:
+            # matching suffix
+        # elif type(i) == str:
+            # matching pattern
+
+        letter = x[i] # 
+
+        # Check if a child starting with the required letter exists
         if not node.is_leaf() and node.exists_child(letter):
             w = node.get_child(letter)
             index = w.indexlist
@@ -82,17 +86,16 @@ def search_tree(x, T, i):
                     return w, match_l_edge, match_l_suf
                 elif same: # match
                     continue
-                # else: # mismatch
-                return w, match_l_edge, match_l_suf-1
+                else:
+                    return w, match_l_edge, match_l_suf-1
             
-            # search next node
-            return search_node(w, x, i+edge_l)
+            return search_node(x, w, i+edge_l)
 
         else:
             return node, 0, i-1 
     
     root = T[0]
-    return search_node(root, x, i)
+    return search_node(x, root, i)
 
 def extend_from_node(node, i, match_l_suf, x, T):
     # parent is node
@@ -112,7 +115,7 @@ def extend_from_edge(node, i, match_l_suf, x, T, match_l):
     # update parent child from node to w
     # update node indexlist to [match_l:], change parent to w
 
-    previous_indexes = node.index()
+    previous_indexes = node.indexlist
     # x_last_match_letter = x[previous_indexes[0]+match_l-1]
     x_mismatch_letter = x[previous_indexes[0]+match_l]
 
@@ -143,19 +146,21 @@ def extend_from_edge(node, i, match_l_suf, x, T, match_l):
 
 def match(p, x, T = None):
 
+    # should not work with empty pattern
+
     if T is None:
         T = construct_tree(x)
 
-    node, match_l_edge, match_l_p = search_tree(p, T, 0)
+    # node, match_l_edge, match_l_p = search_tree(p, T, 0)
 
-    match_labels = subtree_labels(node)
+    # match_labels = subtree_labels(node)
 
-    if match_l_p != len(p):
-        print("Partial match of p until index match_l_p")
-        print("Indexes with matching prefix in x:")
-    else:
-        print("Complete match of p at the following indexes in x:")
-    print(match_labels)
+    # if match_l_p != len(p):
+    #     print("Partial match of p until index match_l_p")
+    #     print("Indexes with matching prefix in x:")
+    # else:
+    #     print("Complete match of p at the following indexes in x:")
+    # print(match_labels)
 
 def subtree_labels(current_n):
         if current_n.is_leaf():
@@ -163,10 +168,9 @@ def subtree_labels(current_n):
         else:
             yield from [subtree_labels(v) for (k, v) in current_n.children.iteritems()]
 
-
 def main():
     T = construct_tree('abbabab') #abca
-
+    # match('aaba', 'aabaababb')
 
 if __name__ == '__main__':
     main()
