@@ -61,7 +61,7 @@ def search_tree(x, T, i):
     # need node, p, x and an iterator i through p for pattern matching
     # need node, x and iterator i through suffix for suffix matching
 
-    def search_node(x, node, i): # if i == int, then suffix. if i == str, then pattern
+    def search_node(x, node, i, match_length_suf): # if i == int, then suffix. if i == str, then pattern
         # if i == 11:
             # print('Now: 11')
             # print(f'> {x[i:]}')
@@ -83,16 +83,18 @@ def search_tree(x, T, i):
             substr_len = lx-i-1
 
             # Match through edge
+
+            # Match_l_suf is wrong!!
+
             for match_l_edge in range(1,edge_l):
-                match_l_suf = i+match_l_edge # index of current match in x
-                same = x[index[0]+match_l_edge] == x[match_l_suf]
-                print(f'Try to match: {x[index[0]+match_l_edge]} {x[match_l_suf]}')
+                same = x[index[0]+match_l_edge] == x[match_length_suf+match_l_edge]
+                # print(f'Try to match: {x[index[0]+match_l_edge]} {x[match_l_suf]}')
 
                 # matched until end of string, not end of edge
                 if same and match_l_edge == substr_len and substr_len != edge_l:
                     # if i == 11:
                     #     print('> in if')
-                    return w, match_l_edge, match_l_suf
+                    return w, match_l_edge, match_length_suf+match_l_edge
                 elif same: # match
                     # if i == 11:
                     #     print('> in elif')
@@ -101,15 +103,15 @@ def search_tree(x, T, i):
                     # if i == 11:
                     #     print('> in else')
                     # print('else')
-                    return w, match_l_edge, match_l_suf-1
-
-            return search_node(x, w, i+edge_l)
+                    return w, match_l_edge, match_length_suf+match_l_edge-1
+            
+            return search_node(x, w, i+edge_l, match_length_suf+edge_l)
 
         else:
             return node, 0, i-1 
     
     root = T[0]
-    return search_node(x, root, i)
+    return search_node(x, root, i, 0)
 
 def match_tree(x, T, i):
 
@@ -184,6 +186,7 @@ def extend_from_edge(node, i, match_l_suf, x, T, match_l):
     # x_last_match_letter = x[previous_indexes[0]+match_l-1]
     x_mismatch_letter = x[previous_indexes[0]+match_l]
 
+
     # create the intermediate node
     w_index_list = [previous_indexes[0], previous_indexes[0]+match_l]       
     w = Node(w_index_list, None, {}) #node.parent doesnt exist 
@@ -204,8 +207,19 @@ def extend_from_edge(node, i, match_l_suf, x, T, match_l):
     node.update_index(0, previous_indexes[0]+match_l)
 
     # add w children
-    w.reproduction(new_node, x[i+match_l]) # string[match_l]
+    w.reproduction(new_node, x[match_l_suf]) # string[match_l]
     w.reproduction(node, x_mismatch_letter)
+
+    if i == 5:
+        print(len(x))
+        print(i)
+        print(match_l_suf)
+        print(x[i+2])
+        # print(x[match_l_suf])
+        print(x_mismatch_letter)
+        print(new_node)
+        print(node)
+        print(w)
 
     return T
 
