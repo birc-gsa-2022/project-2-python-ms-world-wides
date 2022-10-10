@@ -74,6 +74,48 @@ def search_tree(x, T, i):
             index = w.indexlist
             edge_l = index[1]-index[0]
             lx = len(x)
+            substr_len = lx-i-1
+
+            # Match through edge
+            for match_l_edge in range(1,edge_l):
+                match_l_suf = i+match_l_edge # index of current match in x
+                same = x[index[0]+match_l_edge] == x[match_l_suf]
+
+                # matched until end of string, not end of edge
+                if same and match_l_edge == substr_len and substr_len != edge_l:
+                    return w, match_l_edge, match_l_suf
+                elif same: # match
+                    continue
+                else:
+                    return w, match_l_edge, match_l_suf-1
+
+            return search_node(x, w, i+edge_l)
+
+        else:
+            return node, 0, i-1 
+    
+    root = T[0]
+    return search_node(x, root, i)
+
+def match_tree(x, T, i):
+
+    # need node, p, x and an iterator i through p for pattern matching
+    # need node, x and iterator i through suffix for suffix matching
+
+    def match_node(x, node, i): # if i == int, then suffix. if i == str, then pattern
+        # if type(i) == int:
+            # matching suffix
+        # elif type(i) == str:
+            # matching pattern
+
+        letter = x[i] # 
+
+        # Check if a child starting with the required letter exists
+        if not node.is_leaf() and node.exists_child(letter):
+            w = node.get_child(letter)
+            index = w.indexlist
+            edge_l = index[1]-index[0]
+            lx = len(x)
             substr_len = lx-i
 
             # Match through edge
@@ -89,13 +131,13 @@ def search_tree(x, T, i):
                 else:
                     return w, match_l_edge, match_l_suf-1
             
-            return search_node(x, w, i+edge_l)
+            return match_node(x, w, i+edge_l)
 
         else:
             return node, 0, i-1 
     
     root = T[0]
-    return search_node(x, root, i)
+    return match_node(x, root, i)
 
 def extend_from_node(node, i, match_l_suf, x, T):
     # parent is node
@@ -105,6 +147,10 @@ def extend_from_node(node, i, match_l_suf, x, T):
     index_list = [match_l_suf+1, lx]
     new_node = Node(index_list, None, i)
     T.append(new_node)
+    # print(node.children)
+    # print(x[i:match_l_suf])
+    # print(f'x[i]: {x[i]}')
+    # print(node)
     node.reproduction(new_node, x[i]) # x[i]=string[0]
 
     return T
@@ -169,7 +215,14 @@ def subtree_labels(current_n):
             yield from [subtree_labels(v) for (k, v) in current_n.children.iteritems()]
 
 def main():
-    T = construct_tree('abbabab') #abca
+    # b = 'acgtaaaaaacgtacgtaaaaaacgtacgtaaaaaacgtacgtaaaaaacgtacgtaaaaaacgtacgtaaaaaacgt'
+    # b = 'acgtaaacgtaaacgtaaacgtaaacgtaaacgtaa'
+    b = 'acgtaaacgtaaacgtaaacgtaaacgtaa'
+    # b = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+    # b = 'agcgtgatcgatagctagctagctagcggggatacgctg'
+    # b = 'abcdefghijklmnopqrstuvwxyzaaaaaaaaaaabbbbbbbbaaaaa'
+    # print(b[:21])
+    T = construct_tree(b) #abca
     # match('aaba', 'aabaababb')
 
 if __name__ == '__main__':
