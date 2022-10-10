@@ -35,7 +35,6 @@ class Node():
         else:
             return f'I am inner node between {self.indexlist}'
 
-
 def construct_tree(x):
     '''Function construct_tree(x) that takes a string x and constructs a suffix tree 
     using the class Node.'''
@@ -45,8 +44,7 @@ def construct_tree(x):
 
     x += '$'
 
-    for i in range(len(x)-1): # loop through all suffixes
-        print(f'new match of {i}')
+    for i in range(len(x)): # loop through all suffixes
         node, match_l_edge, match_l_suf = search_tree(x, T, i)
         if match_l_edge == 0: # no match in node, extend from it
             T = extend_from_node(node, i, match_l_suf, x, T) # i_match 
@@ -62,20 +60,10 @@ def search_tree(x, T, i):
     # need node, x and iterator i through suffix for suffix matching
 
     def search_node(x, node, i, match_length_suf): # if i == int, then suffix. if i == str, then pattern
-        # if i == 11:
-            # print('Now: 11')
-            # print(f'> {x[i:]}')
-        # if type(i) == int:
-            # matching suffix
-        # elif type(i) == str:
-            # matching pattern
 
-        letter = x[i] # 
-        # print(f'Now match: {x[i:]}')
-        # print(node)
+        letter = x[i]
         # Check if a child starting with the required letter exists
         if not node.is_leaf() and node.exists_child(letter):
-            print('Found child')
             w = node.get_child(letter)
             index = w.indexlist
             edge_l = index[1]-index[0]
@@ -84,31 +72,20 @@ def search_tree(x, T, i):
 
             # Match through edge
 
-            # Match_l_suf is wrong!!
-
             for match_l_edge in range(1,edge_l):
-                same = x[index[0]+match_l_edge] == x[match_length_suf+match_l_edge]
-                # print(f'Try to match: {x[index[0]+match_l_edge]} {x[match_l_suf]}')
+                same = x[index[0]+match_l_edge] == x[i+match_l_edge]
 
                 # matched until end of string, not end of edge
-                if same and match_l_edge == substr_len and substr_len != edge_l:
-                    # if i == 11:
-                    #     print('> in if')
+                if same and match_l_edge == substr_len: # and substr_len < edge_l: #do we need this?
                     return w, match_l_edge, match_length_suf+match_l_edge
-                elif same: # match
-                    # if i == 11:
-                    #     print('> in elif')
-                    continue
-                else:
-                    # if i == 11:
-                    #     print('> in else')
-                    # print('else')
-                    return w, match_l_edge, match_length_suf+match_l_edge-1
-            
+                elif not same:
+                    return w, match_l_edge, match_length_suf+match_l_edge
+
+            # search the next node, update how far we have matched so far
             return search_node(x, w, i+edge_l, match_length_suf+edge_l)
 
         else:
-            return node, 0, i-1 
+            return node, 0, match_length_suf #i-1
     
     root = T[0]
     return search_node(x, root, i, 0)
@@ -158,34 +135,24 @@ def match_tree(x, T, i):
 def extend_from_node(node, i, match_l_suf, x, T):
     # parent is node
     # create leaf node with string[i:]
-    print(f'extend {i} from node {node}')
 
     lx = len(x)
-    index_list = [match_l_suf+1, lx]
+    index_list = [match_l_suf+i, lx]
     new_node = Node(index_list, None, i)
     T.append(new_node)
-    # print(node.children)
-    # print(i)
-    # print(f'x[i:match_l_suf]: {x[i:match_l_suf]}')
-    # print(node)
 
-    # node.parent.reproduction(w, x[previous_indexes[0]])
     node.reproduction(new_node, x[i]) # x[i]=string[0]
 
     return T
 
 def extend_from_edge(node, i, match_l_suf, x, T, match_l):
 
-    print(f'Extend from edge with label {i}')
-
     # create new node w = node[:match_l] with parent of 'node' as parent, string and node as children
     # update parent child from node to w
     # update node indexlist to [match_l:], change parent to w
 
     previous_indexes = node.indexlist
-    # x_last_match_letter = x[previous_indexes[0]+match_l-1]
     x_mismatch_letter = x[previous_indexes[0]+match_l]
-
 
     # create the intermediate node
     w_index_list = [previous_indexes[0], previous_indexes[0]+match_l]       
@@ -198,8 +165,7 @@ def extend_from_edge(node, i, match_l_suf, x, T, match_l):
     # create the new node
 
     lx = len(x)
-    #j = index of first mismatch in string
-    new_index_list = [match_l_suf+1, lx]
+    new_index_list = [match_l_suf+i, lx]
     new_node = Node(new_index_list, None, i) # index list, parent, label because leaf
     T.append(new_node)
 
@@ -209,17 +175,6 @@ def extend_from_edge(node, i, match_l_suf, x, T, match_l):
     # add w children
     w.reproduction(new_node, x[match_l_suf]) # string[match_l]
     w.reproduction(node, x_mismatch_letter)
-
-    if i == 5:
-        print(len(x))
-        print(i)
-        print(match_l_suf)
-        print(x[i+2])
-        # print(x[match_l_suf])
-        print(x_mismatch_letter)
-        print(new_node)
-        print(node)
-        print(w)
 
     return T
 
@@ -248,8 +203,9 @@ def subtree_labels(current_n):
             yield from [subtree_labels(v) for (k, v) in current_n.children.iteritems()]
 
 def main():
+    b = 'abbab'
     # b = 'acgtaaaaaacgtacgtaaaaaacgtacgtaaaaaacgtacgtaaaaaacgtacgtaaaaaacgtacgtaaaaaacgt'
-    b = 'acgtaaacgtaaacgtaaacgtaaacgtaaacgtaa' #aaacgtaa aacgtaa
+    # b = 'acgtaaacgtaaacgtaaacgtaaacgtaaacgtaa' #aaacgtaa aacgtaa
     # b = 'acgtaaacgtaaacgtaaacgtaaacgtaa'
     # b = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
     # b = 'agcgtgatcgatagctagctagctagcggggatacgctg'
