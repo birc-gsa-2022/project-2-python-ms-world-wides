@@ -2,6 +2,7 @@
 # all files that start with test_*.py and run all functions with
 # names that start with test_
 
+
 from elv import construct_tree
 
 def get_tree_indexes(T):
@@ -57,3 +58,5 @@ def test_construct_tree():
     print(results)
     expectations = [[2,8],[2,8],[5,8],[5,8],[7,8],[7,8],[7,8],[7,8],[0,2],[1,2],[3,5]]
     assert(sorted(results)==sorted(expectations))
+
+
