@@ -47,9 +47,13 @@ def construct_tree(x):
     for i in range(len(x)): # loop through all suffixes
         node, match_l_edge, match_l_suf = search_tree(x, T, i)
         if match_l_edge == 0: # no match in node, extend from it
+            # print('extend from node')
             T = extend_from_node(node, i, match_l_suf, x, T) # i_match 
         else: # match within part of edge, extend within edge
+            # print('extend from edge')
             T = extend_from_edge(node, i, match_l_suf, x, T, match_l_edge) 
+
+        # print(get_tree_indexes(T))
 
     return T
 
@@ -62,23 +66,29 @@ def search_tree(x, T, i):
     def search_node(x, node, i, match_length_suf): # if i == int, then suffix. if i == str, then pattern
 
         letter = x[i]
+        # print(x[i:])
         # Check if a child starting with the required letter exists
         if not node.is_leaf() and node.exists_child(letter):
             w = node.get_child(letter)
+            # print(f'found child {w}')
             index = w.indexlist
             edge_l = index[1]-index[0]
             lx = len(x)
             substr_len = lx-i-1
 
+
             # Match through edge
 
-            for match_l_edge in range(1,edge_l):
+            
+            for match_l_edge in range(1,edge_l): # just edge or edge+1?
                 same = x[index[0]+match_l_edge] == x[i+match_l_edge]
 
                 # matched until end of string, not end of edge
                 if same and match_l_edge == substr_len: # and substr_len < edge_l: #do we need this?
+                    # print(match_length_suf+match_l_edge)
                     return w, match_l_edge, match_length_suf+match_l_edge
                 elif not same:
+                    # print(match_length_suf+match_l_edge)
                     return w, match_l_edge, match_length_suf+match_l_edge
 
             # search the next node, update how far we have matched so far
@@ -141,7 +151,7 @@ def extend_from_node(node, i, match_l_suf, x, T):
     new_node = Node(index_list, None, i)
     T.append(new_node)
 
-    node.reproduction(new_node, x[i]) # x[i]=string[0]
+    node.reproduction(new_node, x[index_list[0]]) # x[i]
 
     return T
 
@@ -165,7 +175,7 @@ def extend_from_edge(node, i, match_l_suf, x, T, match_l):
     # create the new node
 
     lx = len(x)
-    new_index_list = [match_l_suf+i, lx]
+    new_index_list = [i+match_l_suf, lx] #[match_l_suf+i, lx] # how long we matched the suffix w edge +1
     new_node = Node(new_index_list, None, i) # index list, parent, label because leaf
     T.append(new_node)
 
@@ -173,7 +183,7 @@ def extend_from_edge(node, i, match_l_suf, x, T, match_l):
     node.update_index(0, previous_indexes[0]+match_l)
 
     # add w children
-    w.reproduction(new_node, x[match_l_suf]) # string[match_l]
+    w.reproduction(new_node, x[new_index_list[0]]) # string[match_l]
     w.reproduction(node, x_mismatch_letter)
 
     return T
@@ -202,9 +212,26 @@ def subtree_labels(current_n):
         else:
             yield from [subtree_labels(v) for (k, v) in current_n.children.iteritems()]
 
+# def get_tree_indexes(T):
+#     '''Return a list of all the nodes' indexes of the tree
+#     Excludes the root'''
+
+#     l=[]
+#     c = []
+#     for node in T:
+#         if node.indexlist!=None:
+#             l.append(node.indexlist)
+#             if node.is_leaf():
+#                 c.append(node.children)
+#             else:
+#                 c.append(node.children.items())
+#     return l, c
+
 def main():
-    b = 'abbab'
-    # b = 'acgtaaaaaacgtacgtaaaaaacgtacgtaaaaaacgtacgtaaaaaacgtacgtaaaaaacgtacgtaaaaaacgt'
+    # b = 'abbab'
+    b = 'acgtaaaaaacgtacgtaaaaaacgtacgtaaaaaacgtacgtaaaaaacgtacgtaaaaaacgtacgtaaaaaacgt'
+    # b = 'acgtaaaaaacgtacgtaaaaaacgtacgtaaaaaacgtacgtaaaaaacgtacgtaaaaaacgtacgtaaaaaa'
+    # b = 'abbabab'
     # b = 'acgtaaacgtaaacgtaaacgtaaacgtaaacgtaa' #aaacgtaa aacgtaa
     # b = 'acgtaaacgtaaacgtaaacgtaaacgtaa'
     # b = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
