@@ -1,12 +1,4 @@
-# To do:
-
-# test for matching
-# Be able to have both partial and complete matches
-# make sure match works
-
-# class for nodes
-from re import L
-
+# By: Charlotte, Elvira and Noa
 
 class Node():
     def __init__(self, indexlist, parent, children):
