@@ -134,7 +134,7 @@ def match(p, x, T = None):
     def match_node(p, i, x, node, match_length_p): 
 
         if len(p) == 0:
-            return node, i, match_length_p
+            return None
 
         letter = p[i]
         # Check if a child starting with the required letter exists
