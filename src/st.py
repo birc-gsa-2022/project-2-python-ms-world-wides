@@ -1,18 +1,17 @@
 import argparse
 from sequence_generator import (genome_sequence_generator,
                                 random_sequence_generator)
-from elv import match
-from lin import lin_runner
+from elv import match                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
 from fasta_dict import fasta_func
 from fastq_dict import fastq_func
 
 
 def tree_runner(fasta_dict, fastq_dict):
-    print(fastq_dict)
-    print(fasta_dict)
     l = []
     for p_key, p_val in fastq_dict.items():
+        print(p_key)
         for x_key, x_val in fasta_dict.items():
+            print(x_key)
             matches = match(p_val, x_val)
             for i in matches:
                 l.append('\t'.join([p_key, x_key, str(i+1), f'{str(len(p_val))}M', p_val]))

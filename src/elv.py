@@ -151,6 +151,10 @@ def match(p, x, T = None):
             if len(p) == 1+i:
                 return w
             for match_l_edge in range(1, edge_l): # step through edge
+
+                #Does not match the sentinel
+                if index[0]+match_l_edge >= len(x):
+                    return None
                 
                 if len(p) == match_l_edge+i:
                     return w
@@ -185,9 +189,9 @@ def match(p, x, T = None):
     return list(leaf_list)
 
 def main():
-    b = 'mississippimississippi'
+    b = 'acgaagacttaaatactaaacgagcctgcgagaaatcgccacggaggtacttggatgttgtgcagttcggcgggaccgacgacgacgagatatcgaggggagacctttcttccggctcgagtaaaatgacagtgtctctaatggtattgcatcttgctctccaagtgcattatccaattccagctatgtatcttgcaatctaaggatttctcagtatgactaaattgatcctctgctggtcttcttgcggttcctcttacggggaggaccatgggttgagcccgaaagagcttgaaagtacaacgcagggagggtgcacggacacccgtttaacagccggcgtttcttagtacggacgatagtattgattgttctttgggcctttggctgaggtcctgtttcatacctgttgtggaggcttggcaagtatcggtcgcgtcatacagacaactttcagtagaatcattatgctaagtacctgtgccggtccgcccgtgggg'
     T = construct_tree(b)
-    p = 'ssi'
+    p = 'tggggccattaggagttggcgggagtgggtttgggttccgtgacaaccca'
 
     print(match(p, b, T))
 
