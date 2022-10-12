@@ -71,14 +71,14 @@ def random_sequence_generator(length, s, type, name, uniform = False, uni_index 
     alpha = ['a','t','c', 'g']
 
     if uniform == True:
-        return alpha[uni_index]*length
+        sequence_list.append(''.join(alpha[uni_index]*length))
     else:
         random.seed(s)
 
         stringlist = [alpha[random.randint(0,3)] for i in range(length)]
         sequence_list.append(''.join(stringlist))
 
-        return sequence_list
+    return sequence_list
 
 def main():
     # newname = cleanup_fasta('src/drosophila_melanogaster_genome.gz')
