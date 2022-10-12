@@ -4,6 +4,7 @@
 
 
 from elv import construct_tree
+from elv import match
 
 def get_leafs(node,L):
     
@@ -63,22 +64,22 @@ def test_get_leafs():
     expectations = [[0,5]]
     assert(sorted(results)==sorted(expectations))
 
-# def test_search_tree_simple():
-#     '''Test the search_tree function with simple strings and patterns'''
+def test_search_tree_simple():
+    '''Test the search_tree function with simple strings and patterns'''
 
-#     string = 'abcdeabcdeabced'
-#     pattern = 'ab'
-#     expectations = [0,5,10]
-#     results = search_pattern(pattern, string)
-#     assert(sorted(results)==sorted(expectations))
+    string = 'abcdeabcdeabced'
+    pattern = 'ab'
+    expectations = [0,5,10]
+    results = match(pattern, string)
+    assert(sorted(results)==sorted(expectations))
 
-#     pattern = 'cde'
-#     expectations = [2,7]
-#     results = search_pattern(pattern, string)
-#     assert(sorted(results)==sorted(expectations))
+    pattern = 'cde'
+    expectations = [2,7]
+    results = match(pattern, string)
+    assert(sorted(results)==sorted(expectations))
 
-#     pattern = ''
-#     expectations = []
-#     results = search_pattern(pattern, string)
-#     assert(sorted(results)==sorted(expectations))
+    pattern = ''
+    expectations = []
+    results = match(pattern, string)
+    assert(sorted(results)==sorted(expectations))
 
