@@ -134,17 +134,6 @@ def subtree_labels(current_n):
             for v in current_n.children.values():
                 yield from subtree_labels(v)
 
-def get_leafs(node,L):
-    if node.is_leaf():
-        L.append(node.children)
-    
-    else: 
-        for letter in node.children:
-            child = node.get_child(letter)
-            if child.is_leaf():
-                L.append(child.children)
-            else:
-                get_leafs(child,L)
 def match(p, x, T = None):
 
     def match_node(p, i, x, node, match_length_p): 
@@ -192,23 +181,14 @@ def match(p, x, T = None):
     if m_node == None:
         return leaf_list 
     
-    get_leafs(m_node, leaf_list)
-
-    leaf_list_2 = subtree_labels(m_node)
-    
-    # for el in leaf_list:
-    #     print(el, end =' ')
-    # print()
-    # for el in leaf_list_2:
-    #     print(el, end =' ')
-    # print()
+    leaf_list = subtree_labels(m_node)
             
-    return list(leaf_list_2)
+    return list(leaf_list)
 
 def main():
-    b = 'acgtaagtaacgtaagtaacgtaagta'
+    b = 'acgtgacg'
     T = construct_tree(b)
-    p = 'acgta'
+    p = 'a'
 
     print(match(p, b, T))
 
