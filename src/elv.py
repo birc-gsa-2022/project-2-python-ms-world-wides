@@ -45,8 +45,6 @@ def construct_tree(x):
         else: # match within part of edge, extend within edge
             T = extend_from_edge(node, i, match_l_suf, x, T, match_l_edge) 
 
-        # print(get_tree_indexes(T))
-
     return T
 
 #Function searches for string x in Suffix tree T
@@ -142,22 +140,19 @@ def match(p, x, T = None):
             w = node.get_child(letter)
             index = w.indexlist
             edge_l = index[1]-index[0]
-            p_len = len(p)-i
-
 
             # Match through edge
-            for match_l_edge in range(1,edge_l): # just edge or edge+1?
-
-                if len(p) == i+match_l_edge: # reached end
+            if len(p) == 1+i:
+                return w
+            for match_l_edge in range(1, edge_l): # step through edge
+                
+                if len(p) == match_l_edge+i:
                     return w
 
                 same = x[index[0]+match_l_edge] == p[i+match_l_edge]
-                
-                if len(p) == i+match_l_edge+1: # reached end
-                    return w
-                # matched until end of string, not end of edge
-                if same and match_l_edge == p_len: # and substr_len < edge_l: #do we need this?
-                    return w
+
+                if same:
+                    continue
                 elif not same:
                     return None
 
@@ -165,7 +160,7 @@ def match(p, x, T = None):
             return match_node(p, i+edge_l, x, w, match_length_p+edge_l)
 
         else:
-            return node, 0, match_length_p
+            return None # not node?
 
 
     if T is None:
@@ -173,7 +168,6 @@ def match(p, x, T = None):
 
     root = T[0]
     m_node = match_node(p, 0, x, root, 0)
-    print(m_node)
 
     leaf_list = []
     
@@ -215,10 +209,10 @@ def get_leafs(node,L):
                 get_leafs(child,L)
 
 def main():
-    # b = 'acgtaaaaaacgtacgtaaaaaacgtacgtaaaaaacgtacgtaaaaaacgtacgtaaaaaacgtacgtaaaaaacgt'
-    b = 'actacg'
+    b = 'acgtaagta'
+    # b = 'actacg'
     T = construct_tree(b)
-    p = 'ac'
+    p = 'hh'
 
     print(match(p, b, T))
 
