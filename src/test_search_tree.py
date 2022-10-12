@@ -53,6 +53,16 @@ def test_get_leafs():
     expectations = [[0,1,2,3,4],[0],[1],[2],[3],[4],[0,1,2,3],[0,1,2],[0,1]]
     assert(sorted(results)==sorted(expectations))
 
+    results = []
+    T = construct_tree('acgtgacg')
+    node = T[0].children['a']
+    L = []
+    get_leafs(node, L)
+    results.append(sorted(L))
+    print(L)
+    expectations = [[0,5]]
+    assert(sorted(results)==sorted(expectations))
+
 # def test_search_tree_simple():
 #     '''Test the search_tree function with simple strings and patterns'''
 
