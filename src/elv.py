@@ -138,9 +138,8 @@ def match(p, x, T = None):
 
     def match_node(p, i, x, node, match_length_p): 
 
-        if len(p) == 0:
+        if len(p[i:]) == 0:
             return None
-
         letter = p[i]
         # Check if a child starting with the required letter exists
         if not node.is_leaf() and node.exists_child(letter):
@@ -186,9 +185,9 @@ def match(p, x, T = None):
     return list(leaf_list)
 
 def main():
-    b = 'acgtgacg'
+    b = 'mississippimississippi'
     T = construct_tree(b)
-    p = 'a'
+    p = 'ssi'
 
     print(match(p, b, T))
 
