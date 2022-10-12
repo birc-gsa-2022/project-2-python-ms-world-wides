@@ -148,7 +148,6 @@ def match(p, x, T = None):
         # Check if a child starting with the required letter exists
         if not node.is_leaf() and node.exists_child(letter):
             w = node.get_child(letter)
-            print(w)
             index = w.indexlist
             edge_l = index[1]-index[0]
             p_len = len(p)-i
@@ -156,6 +155,9 @@ def match(p, x, T = None):
 
             # Match through edge
             for match_l_edge in range(1,edge_l): # just edge or edge+1?
+
+                if len(p) == i+match_l_edge: # reached end
+                    return w
 
                 same = x[index[0]+match_l_edge] == p[i+match_l_edge]
                 
@@ -192,9 +194,11 @@ def match(p, x, T = None):
     leaf_list_2 = subtree_labels(m_node)
     
     for el in leaf_list:
-        print(el)
+        print(el, end =' ')
+    print()
     for el in leaf_list_2:
-        print(el)
+        print(el, end =' ')
+    print()
             
     return leaf_list
 
@@ -202,7 +206,8 @@ def subtree_labels(current_n):
         if current_n.is_leaf():
             yield current_n.children
         else:
-            yield from [subtree_labels(v) for (k, v) in current_n.children.iteritems()]
+            for v in current_n.children.values():
+                yield from subtree_labels(v)
 
 def get_leafs(node,L):
     
@@ -219,7 +224,7 @@ def get_leafs(node,L):
 
 def main():
     # b = 'acgtaaaaaacgtacgtaaaaaacgtacgtaaaaaacgtacgtaaaaaacgtacgtaaaaaacgtacgtaaaaaacgt'
-    b = 'agcttacg'
+    b = 'actacg'
     T = construct_tree(b)
     p = 'ac'
 
