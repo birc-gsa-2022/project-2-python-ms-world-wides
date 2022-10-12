@@ -49,7 +49,7 @@ def plot_runtime_search(max_length, iterations):
 
 def main():
     #try
-    plot_runtime_construct(20, 40)
+    plot_runtime_construct(1000, 10)
     plot_runtime_search()
 
 if __name__ == '__main__':
