@@ -7,7 +7,7 @@ from elv import construct_tree
 from elv import subtree_labels
 from elv import match
 
-def test_get_leafs():
+def test_subtree_labels():
     '''Test if we can get all the leafs from a node'''
 
     results = []
@@ -23,8 +23,7 @@ def test_get_leafs():
     results = []
     T = construct_tree('abcd')
     for branch in T:
-        L = []
-        get_leafs(branch, L)
+        L = subtree_labels(branch)
         results.append(sorted(L))
     print(L)
     expectations = [[0,1,2,3,4],[0],[1],[2],[3],[4]]
@@ -34,8 +33,7 @@ def test_get_leafs():
     results = []
     T = construct_tree('aaaa')
     for branch in T:
-        L = []
-        get_leafs(branch, L)
+        L = subtree_labels(branch)
         results.append(sorted(L))
     print(L)
     expectations = [[0,1,2,3,4],[0],[1],[2],[3],[4],[0,1,2,3],[0,1,2],[0,1]]
@@ -44,8 +42,7 @@ def test_get_leafs():
     results = []
     T = construct_tree('acgtgacg')
     node = T[0].children['a']
-    L = []
-    get_leafs(node, L)
+    L = subtree_labels(node)
     results.append(sorted(L))
     print(L)
     expectations = [[0,5]]
