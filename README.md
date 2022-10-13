@@ -14,18 +14,38 @@ Implement the tool `st` that does exact pattern matching using a suffix tree. Te
 # Report
 
 ## Specify if you have used a linear time or quadratic time algorithm.
-
+In the implementation we used the quadratic time algorithm. 
 ## Insights you may have had while implementing and comparing the algorithms.
 
 ## Problems encountered if any.
+Not explicit return statement caused very weird problems with None being returned in certain cases.Apart from that using many different variables for indexing into the suffix, edge and the whole string caused some confusion and incorrect results. 
 
 ## Correctness
 
-*Describe experiments that verifies the correctness of your implementations.*
+To check the correctness of the algorithm we compared the output of our match-algorithm with the output of the linear exact matching algorithm from project one.
 
 ## Running time
 
-*Describe experiments that verifies that your implementation of `st` uses no more time than O(n) or O(n²) (depending on the algorithm) for constructing the suffix tree and no more than O(m) for searching for a given read in it. Remember to explain your choice of test data. What are “best” and “worst” case inputs?*
+### Constructing algorithm
+The algorithm we implemented for constructing the tree takes no longer than O(n²), because for all n suffixes of x we walk trough the tree once (upper bound n steps per suffix), until it mismatches and then update/insert the (new) node(s) in linear time.
 
-*If you have graphs that show the running time--you probably should have--you can embed them here like we did in the previous project.*
+A worst case input in this implementation would be x = a^n, because in every iteration we have to walk down the whole suffix until we reach the $ and then add a new node.
+
+A best case input would be a String x of unique characters, because for every suffix we would mismatch in the fist step and then insert a new node to the root in linear time. -> O(n)
+
+In the following plot the running time is quadratic, as expected, for the worst case (x = a^n). For a random sequence (average case) the running time seems to be linear.
+![](fig/Figure_compare_runtime_construct.png)
+
+
+### Search algorithm
+The implemented algorithm for the search is O(m+Z), because for a pattern of length m we only need to walk down the tree (max. m steps) until a mismatch occurs (slow-scan) and then report all the leafs "Z" of the "subtree" by jumping from parents to children via links (fast-scan). The figure below shows this: 
+![](fig/rand_search.png)
+
+In the figure we decided to plot a Tree with length(x) = 1000 and patterns from length 5 to 100 and, because for smaller patterns (length < 5) then the m becomes negligible in comparison to Z (as explained more in detail below).
+
+A best case input could look like T(x) with x = a^n and p = b^m, because the pattern would mismatch in the first step and no leaves would be reported.
+
+A worst case input could be the T(x) of x = a^n and p = a, because we would have to report all n leaves. The shorter the p, the more leaves we need to report which has a high impact on the runtime -> O(m+Z) 
+![](fig/Increasing_matches.png)
+
 
