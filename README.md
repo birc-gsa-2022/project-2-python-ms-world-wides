@@ -26,7 +26,7 @@ To check the correctness of the algorithm we compared the output of our match-al
 
 ## Running time
 
-# Constructing algorithm
+### Constructing algorithm
 The algorithm we implemented for constructing the tree takes no longer than O(n²), because for all n suffixes of x we walk trough the tree once (upper bound n steps per suffix), until it mismatches and than update/insert the new node(s) in linear time.
 
 A worst case input in this implementation would be x = a^n, because in every iteration we have to walk down the whole suffix until we reach the $ and then add a new node.
@@ -35,7 +35,7 @@ A best case input would be a String x of unique characters, because for every su
 
 ![](fig/Figure_compare_runtime_construct.png)
 
-# Search algorithm
+### Search algorithm
 The implemented algorithm for the search is O(m), because for a pattern of length m we only need to walk down the tree (max. m steps) until a mismatch occurs (slow-scan) and then report all the children of the "subtree" by jumping from parents to children via links (fast-scan). 
 ![](fig/rand_search.png)
 A best case input could look like S(x) with x = a^n and p = b^m, because the pattern would mismatch in the first step and no leaf would be reported.
