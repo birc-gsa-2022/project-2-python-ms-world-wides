@@ -18,25 +18,28 @@ In the implementation we used the quadratic time algorithm.
 ## Insights you may have had while implementing and comparing the algorithms.
 
 ## Problems encountered if any.
-Not explicit return statement caused very weird problems with None being returned in certain cases.
+Not explicit return statement caused very weird problems with None being returned in certain cases.Apart from that using many different variables for indexing into the suffix, edge and the whole string caused some confusion and incorrect results. 
 
 ## Correctness
 
-To check the correctness of the algorithm we compared the output of our match-algorithm with the output of the linear and naive exact matching algorithms from project one.
+To check the correctness of the algorithm we compared the output of our match-algorithm with the output of the linear exact matching algorithm from project one.
 
 ## Running time
 
+# Constructing algorithm
 The algorithm we implemented for constructing the tree takes no longer than O(n²), because for all n suffixes of x we walk trough the tree once (upper bound n steps per suffix), until it mismatches and than update/insert the new node(s) in linear time.
-![](fig/Figure_compare_runtime_construct.png)
 
 A worst case input in this implementation would be x = a^n, because in every iteration we have to walk down the whole suffix until we reach the $ and then add a new node.
-![](fig/Figure_runtime_construct.png)
 
 A best case input would be a String x of unique characters, because for every suffix we would mismatch in the fist step and then insert a new node to the root in linear time. -> O(n)
-![](fig/rand_search.png)
-The implemented algorithm for the search is O(m), because for a pattern of length m we only need to walk down the tree (max. m steps) until a mismatch occurs (slow-scan) and then report all the children of the "subtree" by jumping from parents to children via links (fast-scan). 
 
+![](fig/Figure_compare_runtime_construct.png)
+
+# Search algorithm
+The implemented algorithm for the search is O(m), because for a pattern of length m we only need to walk down the tree (max. m steps) until a mismatch occurs (slow-scan) and then report all the children of the "subtree" by jumping from parents to children via links (fast-scan). 
+![](fig/rand_search.png)
 A best case input could look like S(x) with x = a^n and p = b^m, because the pattern would mismatch in the first step and no leaf would be reported.
+
 A worst case input could be the S(x) of x = a^n and p = a, because we would have to report all n nodes. The shorter the p, the more nodes we need to report which has a high impact on the runtime -> O(m+Z) 
 ![](fig/Increasing_matches.png)
 
