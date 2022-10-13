@@ -73,7 +73,7 @@ def test_search(T, x, p_max_length, iterations):
 def main():
     #try
     #plot_runtime_construct(100, 2)
-    plot_runtime_search(100,30,10)
+    plot_runtime_search(1000,100,50)
 if __name__ == '__main__':
     main()
 

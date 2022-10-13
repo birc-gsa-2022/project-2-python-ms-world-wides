@@ -22,11 +22,9 @@ Not explicit return statement caused very weird problems with None being returne
 
 ## Correctness
 
-*Describe experiments that verifies the correctness of your implementations.*
+To check the correctness of the algorithm we compared the output of our match-algorithm with the output of the linear and naive exact matching algorithms from project one.
 
 ## Running time
-
-*Describe experiments that verifies that your implementation of `st` uses no more time than O(n) or O(n²) (depending on the algorithm) for constructing the suffix tree and no more than O(m) for searching for a given read in it. Remember to explain your choice of test data. What are “best” and “worst” case inputs?*
 
 The algorithm we implemented for constructing the tree takes no longer than O(n²), because for all n suffixes of x we walk trough the tree once (upper bound n steps per suffix), until it mismatches and than update/insert the new node(s) in linear time.
 ![](figs/Figure_compare_runtime_construct.png)
@@ -39,8 +37,7 @@ A best case input would be a String x of unique characters, because for every su
 The implemented algorithm for the search is O(m), because for a pattern of length m we only need to walk down the tree (max. m steps) until a mismatch occurs (slow-scan) and then report all the children of the "subtree" by jumping from parents to children via links (fast-scan). 
 
 A best case input could look like S(x) with x = a^n and p = b^m, because the pattern would mismatch in the first step and no leaf would be reported.
-A worst case input could be the S(x) of x = a^n and p = a, because we would have to report all n nodes. -> O(n)?
+A worst case input could be the S(x) of x = a^n and p = a, because we would have to report all n nodes. The shorter the p, the more nodes we need to report which has a high impact on the runtime -> O(m+Z) 
+![](figs/Increasing_matches.png)
 
-
-*If you have graphs that show the running time--you probably should have--you can embed them here like we did in the previous project.*
 
