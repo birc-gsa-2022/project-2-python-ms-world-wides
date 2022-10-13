@@ -33,7 +33,7 @@ A worst case input in this implementation would be x = a^n, because in every ite
 ![](figs/Figure_runtime_construct.png)
 
 A best case input would be a String x of unique characters, because for every suffix we would mismatch in the fist step and then insert a new node to the root in linear time. -> O(n)
-
+![](fig/rand_search.png)
 The implemented algorithm for the search is O(m), because for a pattern of length m we only need to walk down the tree (max. m steps) until a mismatch occurs (slow-scan) and then report all the children of the "subtree" by jumping from parents to children via links (fast-scan). 
 
 A best case input could look like S(x) with x = a^n and p = b^m, because the pattern would mismatch in the first step and no leaf would be reported.

@@ -4,8 +4,10 @@ import elv
 import random
 
 def generate_rand_seq(length_x):
-    random.seed()
-    a = ['a', 'c', 'g', 't']
+    random.seed(1)
+    a = ['a', 'c', 'g', 't','i','j']
+    #a = ['a', 'c', 'g']
+
     x = ""
     for i in range(length_x):
         x = "".join((x, random.choice(a)))
