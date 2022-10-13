@@ -138,9 +138,8 @@ def match(p, x, T = None):
 
     def match_node(p, i, x, node, match_length_p): 
 
-        if len(p) == 0:
+        if len(p[i:]) == 0:
             return None
-
         letter = p[i]
         # Check if a child starting with the required letter exists
         if not node.is_leaf() and node.exists_child(letter):
@@ -152,6 +151,10 @@ def match(p, x, T = None):
             if len(p) == 1+i:
                 return w
             for match_l_edge in range(1, edge_l): # step through edge
+
+                #Does not match the sentinel
+                if index[0]+match_l_edge >= len(x):
+                    return None
                 
                 if len(p) == match_l_edge+i:
                     return w
@@ -186,9 +189,9 @@ def match(p, x, T = None):
     return list(leaf_list)
 
 def main():
-    b = 'acgtgacg'
+    b = 'acgaagacttaaatactaaacgagcctgcgagaaatcgccacggaggtacttggatgttgtgcagttcggcgggaccgacgacgacgagatatcgaggggagacctttcttccggctcgagtaaaatgacagtgtctctaatggtattgcatcttgctctccaagtgcattatccaattccagctatgtatcttgcaatctaaggatttctcagtatgactaaattgatcctctgctggtcttcttgcggttcctcttacggggaggaccatgggttgagcccgaaagagcttgaaagtacaacgcagggagggtgcacggacacccgtttaacagccggcgtttcttagtacggacgatagtattgattgttctttgggcctttggctgaggtcctgtttcatacctgttgtggaggcttggcaagtatcggtcgcgtcatacagacaactttcagtagaatcattatgctaagtacctgtgccggtccgcccgtgggg'
     T = construct_tree(b)
-    p = 'a'
+    p = 'tggggccattaggagttggcgggagtgggtttgggttccgtgacaaccca'
 
     print(match(p, b, T))
 
