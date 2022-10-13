@@ -5,7 +5,7 @@ import random
 
 def generate_rand_seq(length_x):
     random.seed(1)
-    a = ['a', 'c', 'g', 't','i','j']
+    a = ['a', 'c', 'g', 't']
 
     x = ""
     for i in range(length_x):
